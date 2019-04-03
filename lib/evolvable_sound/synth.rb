@@ -1,5 +1,5 @@
 class EvolvableSound::Synth
-  def self.define_evolvable_synth_genes
+  def self.define_evolvable_genes
     classes.each do |klass|
       klass.class_eval do
         def expression(beat)

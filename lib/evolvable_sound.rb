@@ -1,6 +1,7 @@
 require 'evolvable_sound/version'
 require 'evolvable_sound/sonic_pi_synthinfo'
 require 'evolvable_sound/synth'
+require 'evolvable_sound/sample'
 require 'evolvable'
 require 'sonic_pi'
 require 'byebug'
@@ -9,8 +10,11 @@ class EvolvableSound
   include Evolvable
 
   def self.evolvable_gene_pool
-    Synth.define_evolvable_synth_genes
-    Synth.classes.map { |klass| [klass, 1] }
+    Synth.define_evolvable_genes
+    Sample.define_evolvable_genes
+    gene_pool = Synth.classes.map { |klass| [klass, 3] }
+    gene_pool.concat Sample.classes.map { |klass| [klass, 1] }
+    gene_pool
   end
 
   def self.evolvable_gene_pool_size
@@ -46,8 +50,8 @@ class EvolvableSound
   def play
     sonic_pi_code = ''
     BEATS_COUNT.times do |beat_count|
-      @genes.each do |synth|
-        expression = synth.expression(beat_count)
+      @genes.each do |gene_class|
+        expression = gene_class.expression(beat_count)
         sonic_pi_code << expression if expression
       end
       sonic_pi_code << "sleep 0.3\n"
