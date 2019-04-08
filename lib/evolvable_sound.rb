@@ -17,8 +17,8 @@ class EvolvableSound
     gene_pool
   end
 
-  def self.evolvable_gene_pool_size
-    4
+  def self.evolvable_genes_count
+    10
   end
 
   def self.evolvable_evaluate!(bands)
