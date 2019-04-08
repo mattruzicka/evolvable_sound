@@ -9,3 +9,4 @@
 
 /sounds/*
 !sounds/.gitkeep
+.byebug_history
