@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'evolvable_sound'
+
+population_name = 'ONG2'
+EvolvableSound.compose_song(population_name)
+EvolvableSound.play_song(population_name)

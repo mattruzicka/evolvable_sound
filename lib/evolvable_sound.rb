@@ -9,6 +9,44 @@ require 'sonic_pi'
 class EvolvableSound
   include Evolvable
 
+  def self.compose_song(population_name)
+    top_sound_file_paths = find_top_rated_sound_per_generation(population_name)
+    song_code = ''
+    top_sound_file_paths.each do |file_path|
+      rating = file_name_meta_attrs(file_path)[:rating]
+      song_code << File.read(file_path)
+    end
+    File.write("./songs/#{population_name}.rb", song_code)
+  end
+
+  def self.find_top_rated_sound_per_generation(population_name)
+    sounds_generation_ratings = Hash.new { |hash, key| hash[key] = [] }
+    Dir["#{FileUtils.pwd}/sounds/#{population_name}*.rb"].max_by do |file_path|
+      file_meta_attrs = file_name_meta_attrs(file_path)
+      rating = file_meta_attrs[:rating]
+      generation = file_meta_attrs[:generation]
+      sounds_generation_ratings[generation] << [rating, file_path]
+    end
+    top_sound_file_paths = []
+    sounds_generation_ratings.each do |generation, sounds|
+      top_rated_sound = sounds.max_by { |rating, _file_path| rating }
+      sound_file_path = top_rated_sound[1]
+      top_sound_file_paths[generation] = sound_file_path
+    end
+    top_sound_file_paths
+  end
+
+  def self.file_name_meta_attrs(file_path)
+    file_name = file_path.split("evolvable_sound/sounds/").last
+    file_name.tr!('.rb', '')
+    population_name, class_name, generation, object_index, rating = file_name.split('_')
+    { population_name: population_name,
+      class_name: class_name,
+      generation: generation.to_i,
+      object_index: object_index.to_i,
+      rating: rating.to_i }
+  end
+
   def self.play_song(population_name)
     stop_sound
     play_sound("./songs/#{population_name}")
@@ -66,6 +104,7 @@ class EvolvableSound
     self.rating = client.get_rating(REPLAY_PAUSE, replay_block)
     stop_sound
     client.accept_rating(rating)
+    FileUtils.mv("#{sound_file_name}.rb", "#{sound_file_rating_name}.rb")
   end
 
   def replay_block
@@ -93,8 +132,12 @@ class EvolvableSound
     "sounds/#{population.name}_#{name}"
   end
 
+  def sound_file_rating_name
+    "#{sound_file_name}_#{rating}"
+  end
+
   def evolvable_progress(info = nil)
-    play_sound(sound_file_name)
+    play_sound(sound_file_rating_name)
     sound_parent_1_name = 'sound1'
     client.display_sound_parent_1(sound_parent_1_name)
     stop_sound
