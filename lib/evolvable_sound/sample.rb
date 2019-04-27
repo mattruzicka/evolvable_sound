@@ -11,10 +11,6 @@ class EvolvableSound::Sample
           "sample :#{sample_name}, #{beat_expression}\n"
         end
 
-        def arg_keys
-          @arg_keys ||= arg_defaults.keys
-        end
-
         def initialize_expressions
           Hash.new do |hash, key|
             EvolvableSound::Sample.randomize_args
