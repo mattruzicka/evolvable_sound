@@ -33,7 +33,8 @@ class EvolvableSound::Synth
     @classes ||= lookup_classes
   end
 
-  IGNORED_SYNTH_CLASSES = [SonicPi::Synths::SoundInStereo,
+  IGNORED_SYNTH_CLASSES = [SonicPi::Synths::ModTri, # Breaks with { mod_range_slide_shape: 6 } option
+                           SonicPi::Synths::SoundInStereo,
                            SonicPi::Synths::SoundIn]
 
   def self.lookup_classes
