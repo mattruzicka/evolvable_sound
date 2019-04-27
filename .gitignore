@@ -7,6 +7,7 @@
 /spec/reports/
 /tmp/
 
-/sounds/*
+/sounds/*.rb
+/songs/*.rb
 !sounds/.gitkeep
 .byebug_history

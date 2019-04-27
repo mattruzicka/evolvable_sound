@@ -26,7 +26,7 @@ class EvolvableSound::Sample
         end
       end
       klass = EvolvableSound::Sample.const_set(class_name, evolvable_sample_class)
-      klass.define_method(:sample_name) { sample_name }
+      klass.send(:define_method, :sample_name) { sample_name }
       classes << klass
     end
   end
