@@ -30,12 +30,18 @@ class EvolvableSound::Synth
   end
 
   def self.classes
-    @classes = lookup_classes
+    @classes ||= lookup_classes
   end
+
+  IGNORED_SYNTH_CLASSES = [SonicPi::Synths::SoundInStereo,
+                           SonicPi::Synths::SoundIn]
 
   def self.lookup_classes
     SonicPi::Synths::SynthInfo.synth_infos.each_value.map do |synth|
-      synth.class if synth.is_a?(SonicPi::Synths::SonicPiSynth) && synth.user_facing?
+      next unless synth.is_a?(SonicPi::Synths::SonicPiSynth) && synth.user_facing?
+
+      synth_class = synth.class
+      synth_class unless IGNORED_SYNTH_CLASSES.include?(synth_class)
     end.compact
   end
 
