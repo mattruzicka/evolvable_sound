@@ -4,7 +4,6 @@ require 'evolvable_sound/synth'
 require 'evolvable_sound/sample'
 require 'evolvable'
 require 'sonic_pi'
-require 'byebug'
 
 class EvolvableSound
   include Evolvable
