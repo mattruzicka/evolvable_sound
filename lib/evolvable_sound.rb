@@ -61,7 +61,7 @@ class EvolvableSound
   end
 
   def self.evolvable_genes_count
-    5
+    7
   end
 
   def self.evolvable_evaluate!(bands)
@@ -75,6 +75,18 @@ class EvolvableSound
     sound.name = "sound_#{population.generation_count}_#{object_index}"
     sound.client = Client::CommandLine
     sound
+  end
+
+  def self.evolvable_before_crossover(population)
+    parent_1, parent_2 = population.objects
+    play_sound(parent_1.sound_file_rating_name)
+    parent_1.client.display_sound_parent_1(parent_1.name)
+    stop_sound
+    sleep 0.1
+    play_sound(parent_2.sound_file_rating_name)
+    parent_2.client.display_sound_parent_2(parent_2.name)
+    stop_sound
+    sleep 0.3
   end
 
   SONIC_PI = SonicPi.new
@@ -134,18 +146,6 @@ class EvolvableSound
 
   def sound_file_rating_name
     "#{sound_file_name}_#{rating}"
-  end
-
-  def evolvable_progress(info = nil)
-    play_sound(sound_file_rating_name)
-    sound_parent_1_name = 'sound1'
-    client.display_sound_parent_1(sound_parent_1_name)
-    stop_sound
-    sleep 0.1
-    # TODO: play sound parent 2
-    sound_parent_2_name = 'sound2'
-    client.display_sound_parent_2(sound_parent_2_name)
-    stop_sound
   end
 
   def play_sound(file_name)

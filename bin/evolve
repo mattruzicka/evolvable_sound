@@ -9,7 +9,7 @@ population_attrs = {
   name: 'ONG2',
   size: 2,
   mutation: Evolvable::Mutation.new(rate: 0.2),
-  log_progress: true
+  log_progress: false
 }
 population = EvolvableSound.evolvable_population(population_attrs)
 population.evolve!(generations_count: 10_000)
