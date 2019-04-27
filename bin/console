@@ -12,8 +12,18 @@ require 'evolvable_sound'
 
 require 'irb'
 
-mutation = Evolvable::Mutation.new(rate: 0.2)
-population = EvolvableSound.evolvable_population(size: 10, mutation: mutation, log_progress: true)
-population.evolve!(fitness_goal: 10, generations_count: 10_000)
+# population_attrs = {
+#   name: Time.now.utc.to_i,
+#   size: 10,
+#   mutation: Evolvable::Mutation.new(rate: 0.2),
+#   log_progress: true
+# }
+# population = EvolvableSound.evolvable_population(population_attrs)
+# puts population.name
+# population.evolve!(generations_count: 10_000)
+
+# population_name = ''
+# EvolvableSound.compose_song(population_name)
+# EvolvableSound.play_song(population_name)
 
 IRB.start(__FILE__)
