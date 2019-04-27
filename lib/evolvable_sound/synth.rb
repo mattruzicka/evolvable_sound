@@ -18,11 +18,7 @@ class EvolvableSound::Synth
 
         def initialize_expressions
           Hash.new do |hash, key|
-            hash[key] = if [nil, true].sample
-              {}
-            else
-              EvolvableSound::Synth.randomize_args(args: arg_keys)
-            end
+            EvolvableSound::Synth.randomize_args(args: arg_keys)
           end
         end
       end

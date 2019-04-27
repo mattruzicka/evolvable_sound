@@ -17,11 +17,7 @@ class EvolvableSound::Sample
 
         def initialize_expressions
           Hash.new do |hash, key|
-            hash[key] = if [nil, true].sample
-              {}
-            else
-              EvolvableSound::Sample.randomize_args
-            end
+            EvolvableSound::Sample.randomize_args
           end
         end
       end
