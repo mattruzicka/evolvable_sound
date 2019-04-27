@@ -269,7 +269,9 @@ class EvolvableSound::Synth
       freq_band_slide: lambda { rand(0.0..max_slide) },
       freq_band_slide_shape: lambda { rand(1..7) },
       freq_band_slide_curve: lambda { rand(-1..1.0) },
-      input: lambda { nil } }.slice(*args).each do |arg, lambda|
+      input: lambda { nil } }.each do |arg, lambda|
+        next unless args.include?(arg)
+
         value = lambda.call
         randomized_args[arg] = value if value
     end
