@@ -19,7 +19,6 @@ module Client
       end
 
       VALID_RATINGS = %w(0 1 2 3 4 5 6 7 8 9)
-      # SPACES = ' ' * 50
 
       def get_rating(replay_pause, replay_block)
         rating = get_rating_with_timeout(replay_pause, replay_block)
