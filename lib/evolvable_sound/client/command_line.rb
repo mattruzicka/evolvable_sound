@@ -1,4 +1,5 @@
 require 'timeout'
+require 'io/console'
 
 module Client
   class CommandLine
