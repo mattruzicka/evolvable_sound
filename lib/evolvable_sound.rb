@@ -2,7 +2,8 @@ require 'evolvable_sound/version'
 require 'evolvable_sound/sonic_pi_synthinfo'
 require 'evolvable_sound/synth'
 require 'evolvable_sound/sample'
-require 'evolvable_sound/client/command_line'
+# require 'evolvable_sound/client/command_line'
+require 'evolvable_sound/client/command_line_controller'
 require 'evolvable'
 require 'sonic_pi'
 
@@ -73,7 +74,7 @@ class EvolvableSound
     sound.genes = genes
     sound.population = population
     sound.name = "sound_#{population.generation_count}_#{object_index}"
-    sound.client = Client::CommandLine
+    sound.client = Client::CommandLineController
     sound
   end
 

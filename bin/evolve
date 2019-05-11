@@ -3,10 +3,10 @@
 require 'bundler/setup'
 require 'evolvable_sound'
 
-Client::CommandLine.display_program_name
+Client::CommandLineController.display_program_name
 
 population_attrs = {
-  name: 'ONG2',
+  name: 'test',
   size: 5,
   mutation: Evolvable::Mutation.new(rate: 0.2),
   log_progress: false

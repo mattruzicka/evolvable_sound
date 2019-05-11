@@ -1,9 +1,7 @@
-require 'timeout'
-require 'io/console'
 require 'dino'
 
 module Client
-  class CommandLine
+  class CommandLineController
     class << self
       def display_program_name
         green_name = green_text('evolvable sound')
@@ -14,50 +12,59 @@ module Client
         type_out(green_text(" #{name}"))
       end
 
-      RATING_PROMPT = 'enter rating (0-9): '
+      RATING_PROMPT = 'rating: '
 
       def display_rating_prompt
         type_out("\n #{green_text(RATING_PROMPT)}")
       end
 
-      VALID_RATINGS = %w(0 1 2 3 4 5 6 7 8 9)
-
       def get_rating(replay_pause, replay_block)
-        rating = get_rating_with_timeout(replay_pause, replay_block)
-        rating.strip! if rating
+        get_rating_from_controller(replay_pause, replay_block)
+      end
 
-        until VALID_RATINGS.include?(rating)
-          print("\e[1A                 ")
-          _rows, cols = IO.console.winsize
-          print("\r#{console_width_in_spaces}")
-          print("\r #{green_text(RATING_PROMPT)}")
-          rating = get_rating_with_timeout(replay_pause, replay_block)
-          rating.strip!
+      BOARD = Dino::Board.new(Dino::TxRx::Serial.new)
+      POTENTIOMETER = Dino::Components::Sensor.new(pin: 'A0', board: BOARD)
+      BUTTON = Dino::Components::Button.new(pin: 13, board: BOARD)
+
+      BUTTON.up do
+        @@final_rating = @@p_data
+        @@button_up = true
+      end
+
+      POTENTIOMETER.when_data_received do |data|
+        @@p_data = data
+      end
+
+      def get_rating_from_controller(replay_pause, replay_block)
+        @@button_up = false
+        replay_at = Time.now.utc
+
+        until @@button_up
+          if (Time.now.utc - replay_at) >= replay_pause
+            replay_block.call
+            replay_at = Time.now.utc
+          end
+          rating = normalize_rating(@@p_data)
+          print("\r #{green_text(RATING_PROMPT)}#{rating} \b")
+          sleep 0.05
         end
-        rating.to_i
+
+        @@button_up = false
+        @final_rating = normalize_rating(@@final_rating)
       end
 
-      def console_width_in_spaces
-        _rows, cols = IO.console.winsize
-        ' ' * cols
-      end
+      MAX_RAW_RATING = 1023.0
 
-      def get_rating_with_timeout(replay_pause, replay_block)
-        begin
-          Timeout::timeout(replay_pause) { gets }
-        rescue
-          replay_block.call
-          get_rating_with_timeout(replay_pause, replay_block)
-        end
+      def normalize_rating(data)
+        ((data.to_f / MAX_RAW_RATING) * 100).round
       end
-
-      CLEAR_RATING_SPACES = ' ' * (RATING_PROMPT.length + 1)
 
       def accept_rating(rating)
-        type_out("\e[1A#{CLEAR_RATING_SPACES}", type_speed: 0.02)
-        print(console_width_in_spaces)
-        print("\e[1A\r")
-        type_out(" #{green_text(rating)}\n\n")
+        (RATING_PROMPT.length + @final_rating.to_s.length).times do
+          print("\b \b")
+          sleep 0.03
+        end
+        type_out("#{green_text(rating)}\n\n")
       end
 
       SEX_EMOJIS = ["😘",
