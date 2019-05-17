@@ -31,7 +31,7 @@ module Client
       LED = Dino::Components::Led.new(pin: 12, board: board)
       LED.on
 
-      BUTTON.up do
+      BUTTON.down do
         @@final_rating = @@p_data
         @@button_up = true
       end
