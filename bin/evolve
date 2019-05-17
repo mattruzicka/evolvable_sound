@@ -8,7 +8,7 @@ EvolvableSound.client.display_program_name
 
 population_attrs = {
   name: Time.now.utc.to_i.to_s,
-  size: 10,
+  size: 8,
   mutation: Evolvable::Mutation.new(rate: 0.2),
   log_progress: false
 }
