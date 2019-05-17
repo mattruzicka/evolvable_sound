@@ -58,11 +58,7 @@ module Client
       end
 
       def udp_socket
-        @udp_socket ||= begin
-          socket = UDPSocket.new
-          socket.bind("192.168.2.1", 4915)
-          socket
-        end
+        @udp_socket ||= UDPSocket.new
       end
 
       MAX_RAW_RATING = 1023.0
