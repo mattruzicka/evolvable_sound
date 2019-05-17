@@ -16,6 +16,8 @@ class EvolvableSound::Synth
           @arg_keys ||= arg_defaults.keys
         end
 
+        alias name synth_name
+
         def initialize_expressions
           Hash.new do |hash, key|
             EvolvableSound::Synth.randomize_args(args: arg_keys)

@@ -3,7 +3,8 @@
 require 'bundler/setup'
 require 'evolvable_sound'
 
-Client::CommandLineController.display_program_name
+EvolvableSound.client = Client::CommandLineController
+EvolvableSound.client.display_program_name
 
 population_attrs = {
   name: 'test',

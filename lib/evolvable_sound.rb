@@ -2,7 +2,7 @@ require 'evolvable_sound/version'
 require 'evolvable_sound/sonic_pi_synthinfo'
 require 'evolvable_sound/synth'
 require 'evolvable_sound/sample'
-# require 'evolvable_sound/client/command_line'
+require 'evolvable_sound/client/command_line'
 require 'evolvable_sound/client/command_line_controller'
 require 'evolvable'
 require 'sonic_pi'
@@ -73,9 +73,17 @@ class EvolvableSound
     sound = new
     sound.genes = genes
     sound.population = population
-    sound.name = "sound_#{population.generation_count}_#{object_index}"
-    sound.client = Client::CommandLineController
+    sound.object_index = object_index
+    sound.client = client
     sound
+  end
+
+  def self.client
+    @client ||= Client::CommandLine
+  end
+
+  def self.client=(val)
+    @client = val
   end
 
   def self.evolvable_before_crossover(population)
@@ -102,7 +110,8 @@ class EvolvableSound
 
   attr_accessor :fitness,
                 :name,
-                :client
+                :client,
+                :object_index
 
   alias rating= fitness=
   alias rating fitness
@@ -118,6 +127,10 @@ class EvolvableSound
     stop_sound
     client.accept_rating(rating)
     FileUtils.mv("#{sound_file_name}.rb", "#{sound_file_rating_name}.rb")
+  end
+
+  def name
+    @name ||= compute_name
   end
 
   def replay_block
@@ -142,7 +155,7 @@ class EvolvableSound
   end
 
   def sound_file_name
-    "sounds/#{population.name}_#{name}"
+    "sounds/#{population.name}_sound_#{population.generation_count}_#{object_index}"
   end
 
   def sound_file_rating_name
@@ -155,5 +168,23 @@ class EvolvableSound
 
   def stop_sound
     self.class.stop_sound
+  end
+
+  private
+
+  def compute_name
+    char_index = 0
+    name = +''
+    gene_names = genes.map { |g| g.name.to_s }
+    gene_names.each do |gene_name|
+      char = gene_name[char_index]
+      if char
+        char_index += 1
+      else
+        char = gene_name[-1]
+      end
+      name << char
+    end
+    name
   end
 end
