@@ -62,7 +62,7 @@ class EvolvableSound
   end
 
   def self.evolvable_genes_count
-    7
+    8
   end
 
   def self.evolvable_evaluate!(bands)

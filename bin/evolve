@@ -7,8 +7,8 @@ EvolvableSound.client = Client::CommandLineController
 EvolvableSound.client.display_program_name
 
 population_attrs = {
-  name: 'test',
-  size: 5,
+  name: Time.now.utc.to_i.to_s,
+  size: 10,
   mutation: Evolvable::Mutation.new(rate: 0.2),
   log_progress: false
 }
