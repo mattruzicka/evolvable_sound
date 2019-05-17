@@ -9,8 +9,11 @@ module Client
         type_out("\n \e[32m#{green_name}\e[0m\n\n")
       end
 
-      def display_sound_name(name)
-        type_out(green_text(" #{name}"))
+      def display_sound(evolvable_sound)
+        sound_code_snippet = File.read("./#{evolvable_sound.sound_file_name}.rb")[0..30_000]
+        puts sound_code_snippet.length
+        udp_socket.send sound_code_snippet, 0, UDP_RECIPIENT_ADDR, 4915
+        type_out(green_text(" #{evolvable_sound.name}"))
       end
 
       RATING_PROMPT = 'rating: '

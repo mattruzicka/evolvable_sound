@@ -10,8 +10,8 @@ module Client
         type_out("\n \e[32m#{green_name}\e[0m\n\n")
       end
 
-      def display_sound_name(name)
-        type_out(green_text(" #{name}"))
+      def display_sound(evolvable_sound)
+        type_out(green_text(" #{evolvable_sound.name}"))
       end
 
       RATING_PROMPT = 'enter rating (0-9): '

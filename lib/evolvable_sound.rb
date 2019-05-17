@@ -121,7 +121,7 @@ class EvolvableSound
   def evaluate!
     create_sound_file
     play_sound(sound_file_name)
-    client.display_sound_name(name)
+    client.display_sound(self)
     client.display_rating_prompt
     self.rating = client.get_rating(REPLAY_PAUSE, replay_block)
     stop_sound
