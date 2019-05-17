@@ -28,6 +28,8 @@ module Client
       BOARD = Dino::Board.new(Dino::TxRx::Serial.new)
       POTENTIOMETER = Dino::Components::Sensor.new(pin: 'A0', board: BOARD)
       BUTTON = Dino::Components::Button.new(pin: 13, board: BOARD)
+      LED = Dino::Components::Led.new(pin: 12, board: board)
+      LED.on
 
       BUTTON.up do
         @@final_rating = @@p_data
