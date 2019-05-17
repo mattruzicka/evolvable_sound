@@ -98,7 +98,7 @@ module Client
         type_out("\n\n\n")
       end
 
-      def type_out(string, type_speed: 0.03)
+      def type_out(string, type_speed: 0.06)
         string.split('').each do |char|
           print(char)
           sleep(type_speed)
