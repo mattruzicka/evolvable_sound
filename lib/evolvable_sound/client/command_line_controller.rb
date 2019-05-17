@@ -74,7 +74,7 @@ module Client
       def accept_rating(rating)
         (RATING_PROMPT.length + @final_rating.to_s.length).times do
           print("\b \b")
-          sleep 0.03
+          sleep 0.08
         end
         type_out("#{green_text(rating)}\n\n")
       end
@@ -98,7 +98,7 @@ module Client
         type_out("\n\n\n")
       end
 
-      def type_out(string, type_speed: 0.06)
+      def type_out(string, type_speed: 0.08)
         string.split('').each do |char|
           print(char)
           sleep(type_speed)
