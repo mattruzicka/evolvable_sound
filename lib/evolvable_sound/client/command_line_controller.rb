@@ -1,4 +1,5 @@
 require 'dino'
+require 'socket'
 
 module Client
   class CommandLineController
@@ -35,6 +36,8 @@ module Client
         @@p_data = data
       end
 
+      UDP_RECIPIENT_ADDR = '192.168.2.1'
+
       def get_rating_from_controller(replay_pause, replay_block)
         @@button_up = false
         replay_at = Time.now.utc
@@ -46,11 +49,20 @@ module Client
           end
           rating = normalize_rating(@@p_data)
           print("\r #{green_text(RATING_PROMPT)}#{rating} \b")
+          udp_socket.send rating.to_s, 0, UDP_RECIPIENT_ADDR, 4915
           sleep 0.05
         end
 
         @@button_up = false
         @final_rating = normalize_rating(@@final_rating)
+      end
+
+      def udp_socket
+        @udp_socket ||= begin
+          socket = UDPSocket.new
+          socket.bind("192.168.2.1", 4915)
+          socket
+        end
       end
 
       MAX_RAW_RATING = 1023.0
