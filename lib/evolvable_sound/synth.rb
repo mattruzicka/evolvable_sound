@@ -49,8 +49,8 @@ class EvolvableSound::Synth
   end
 
   def self.randomize_args(args: [],
-                          min_note: 30,
-                          max_note: 100,
+                          min_note: 30.0,
+                          max_note: 100.0,
                           max_attack: 0.5,
                           max_decay: 0.5,
                           max_sustain: 0.5,
@@ -59,7 +59,7 @@ class EvolvableSound::Synth
                           max_decay_level: 0.5,
                           max_sustain_level: 0.5,
                           max_slide: 0.5,
-                          mod_range: 20)
+                          mod_range: 20.0)
     randomized_args = {}
     { note: lambda { rand(min_note..max_note) },
       note_slide: lambda { rand(0.0..max_slide) },
