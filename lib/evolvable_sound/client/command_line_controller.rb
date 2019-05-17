@@ -86,7 +86,7 @@ module Client
         sleep 0.5
 
         ["💚", "💋"].cycle(6) do |emoji|
-          print("\r #{green_sound_name} #{emoji}")
+          print("\r #{green_sound_name} #{red_text(emoji)}")
           sleep 0.10
         end
         sleep 0.5
