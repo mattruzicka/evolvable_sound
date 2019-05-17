@@ -15,7 +15,7 @@ module Client
         type_out(green_text(" #{evolvable_sound.name}"))
       end
 
-      RATING_PROMPT = 'rating: '
+      RATING_PROMPT = 'rating '
 
       def display_rating_prompt
         type_out("\n #{green_text(RATING_PROMPT)}")
@@ -77,43 +77,15 @@ module Client
         type_out("#{green_text(rating)}\n\n")
       end
 
-      SEX_EMOJIS = ["😘",
-                    "😙",
-                    "🔥",
-                    "❤️ ",
-                    "💛",
-                    "💚",
-                    "💙",
-                    "💜",
-                    "🌋",
-                    "🍆",
-                    "🛏️ ",
-                    "🏩",
-                    "👌",
-                    "💦",
-                    "🔩",
-                    "👅",
-                    "😉",
-                    "🍌",
-                    "🚇",
-                    "🍑",
-                    "♨️ ",
-                    "🌶️ ",
-                    "💋",
-                    "🌰",
-                    "🎆",
-                    "💥",
-                    "🐫"]
-
       def display_sound_parent_1(sound_name)
         type_out("\n ")
         green_sound_name = green_text(sound_name)
         type_out("#{green_sound_name} ", type_speed: 0.12)
         sleep 0.5
 
-        SEX_EMOJIS.sample(12).each do |emoji|
-          print("\r #{green_sound_name} #{red_text(emoji)}")
-          sleep 0.12
+        [💚, 💋].cycle(6) do |emoji|
+          print("\r #{green_sound_name} #{emoji}")
+          sleep 0.10
         end
         sleep 0.5
       end
