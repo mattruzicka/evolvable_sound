@@ -85,7 +85,7 @@ module Client
         type_out("#{green_sound_name} ", type_speed: 0.12)
         sleep 0.5
 
-        [💚, 💋].cycle(6) do |emoji|
+        ["💚", "💋"].cycle(6) do |emoji|
           print("\r #{green_sound_name} #{emoji}")
           sleep 0.10
         end
