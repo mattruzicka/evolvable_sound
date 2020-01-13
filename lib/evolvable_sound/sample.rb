@@ -3,6 +3,8 @@ class EvolvableSound::Sample
     SonicPi::Synths::MonoPlayer.all_samples.each do |sample_name|
       class_name = sample_name.to_s.split('_').map(&:capitalize).join
       evolvable_sample_class = Class.new(Object) do
+        include Evolvable::Gene
+
         def expression(beat)
           @expressions ||= initialize_expressions
           return if @expressions[beat].empty?

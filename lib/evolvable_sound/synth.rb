@@ -2,6 +2,8 @@ class EvolvableSound::Synth
   def self.define_evolvable_genes
     classes.each do |klass|
       klass.class_eval do
+        include Evolvable::Gene
+
         def expression(beat)
           @expressions ||= initialize_expressions
           return if @expressions[beat].empty?

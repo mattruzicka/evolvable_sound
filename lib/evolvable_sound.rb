@@ -3,9 +3,10 @@ require 'evolvable_sound/sonic_pi_synthinfo'
 require 'evolvable_sound/synth'
 require 'evolvable_sound/sample'
 require 'evolvable_sound/client/command_line'
-require 'evolvable_sound/client/command_line_controller'
+# require 'evolvable_sound/client/command_line_controller'
 require 'evolvable'
 require 'sonic_pi'
+require 'byebug'
 
 class EvolvableSound
   include Evolvable
@@ -32,10 +33,13 @@ class EvolvableSound
     sounds_generation_ratings.each do |generation, sounds|
       top_rated_sound = sounds.max_by { |rating, _file_path| rating }
       sound_file_path = top_rated_sound[1]
+
       top_sound_file_paths[generation] = sound_file_path
     end
+    top_sound_file_paths.compact!
     top_sound_file_paths
   end
+
 
   def self.file_name_meta_attrs(file_path)
     file_name = file_path.split("evolvable_sound/sounds/").last
@@ -53,20 +57,38 @@ class EvolvableSound
     play_sound("./songs/#{population_name}")
   end
 
-  def self.evolvable_gene_pool
+  def self.evolvable_genes
     Synth.define_evolvable_genes
     Sample.define_evolvable_genes
-    gene_pool = Synth.classes.map { |klass| [klass, 3] }
-    gene_pool.concat Sample.classes.map { |klass| [klass, 1] }
-    gene_pool
+    genes = {}
+    Synth.classes.each do |klass|
+      genes[klass.name] = { count: 3, class: klass }
+    end
+
+    Sample.classes.each do |klass|
+      genes[klass.name] = { count: 1, class: klass }
+    end
+    genes
   end
 
   def self.evolvable_genes_count
     8
   end
 
-  def self.evolvable_evaluate!(bands)
-    bands.each(&:evaluate!)
+  def self.evolvable_evaluate!(population)
+    population.objects.each(&:evaluate!)
+  end
+
+  def self.evolvable_before_evolution(population)
+    parent_1, parent_2 = population.objects.last(2)
+    play_sound(parent_1.sound_file_rating_name)
+    parent_1.client.display_sound_parent_1(parent_1.name)
+    stop_sound
+    sleep 0.1
+    play_sound(parent_2.sound_file_rating_name)
+    parent_2.client.display_sound_parent_2(parent_2.name)
+    stop_sound
+    sleep 0.3
   end
 
   def self.evolvable_initialize(genes, population, object_index)
@@ -86,18 +108,6 @@ class EvolvableSound
     @client = val
   end
 
-  def self.evolvable_before_crossover(population)
-    parent_1, parent_2 = population.objects
-    play_sound(parent_1.sound_file_rating_name)
-    parent_1.client.display_sound_parent_1(parent_1.name)
-    stop_sound
-    sleep 0.1
-    play_sound(parent_2.sound_file_rating_name)
-    parent_2.client.display_sound_parent_2(parent_2.name)
-    stop_sound
-    sleep 0.3
-  end
-
   SONIC_PI = SonicPi.new
 
   def self.play_sound(file_name)
@@ -108,13 +118,15 @@ class EvolvableSound
     SONIC_PI.stop
   end
 
-  attr_accessor :fitness,
-                :name,
-                :client,
+  attr_accessor :name,
+                :rating,
                 :object_index
 
-  alias rating= fitness=
-  alias rating fitness
+  def client
+    self.class.client
+  end
+
+  alias evolvable_value rating
 
   REPLAY_PAUSE = 5
 
@@ -155,7 +167,7 @@ class EvolvableSound
   end
 
   def sound_file_name
-    "sounds/#{population.name}_sound_#{population.generation_count}_#{object_index}"
+    "sounds/#{population.name}_sound_#{population.evolutions_count}_#{object_index}"
   end
 
   def sound_file_rating_name
